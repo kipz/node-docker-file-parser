@@ -371,7 +371,7 @@ function parse(contents, options) {
     var i;
     var line;
     var lineno;
-    var startlineno = 0;
+    var startlineno = 1;
     var lines = contents.split(/\r?\n/);
     var lookingForDirectives = true;
     var parseOptions = {};
@@ -391,6 +391,7 @@ function parse(contents, options) {
             line = remainder + nextLine;
         } else {
             line = nextLine;
+            startlineno = lineno;
         }
 
         if (lookingForDirectives) {
@@ -420,9 +421,9 @@ function parse(contents, options) {
         if (parseResult.command) {
             if (parseResult.command.name !== 'COMMENT' || includeComments) {
                 parseResult.command.startlineno = startlineno;
-                parseResult.command.raw = lines.slice(startlineno, lineno).join("\n");
+                // 1 based to 0 based
+                parseResult.command.raw = lines.slice(startlineno -1 , lineno).join("\n");
                 commands.push(parseResult.command);
-                startlineno = lineno;
             }
         }
         remainder = parseResult.remainder;

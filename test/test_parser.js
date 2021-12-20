@@ -200,9 +200,9 @@ tape('start line numbers', function (t) {
   var dockerFile = fs.readFileSync(dname + '/Dockerfile-with-inline-comment', 'utf8');
   var commands = dockerfileParser.parse(dockerFile);
 
-  t.equal(commands[0].startlineno, 0,  'Start line number should be 0');
-  t.equal(commands[1].startlineno, 1,  'Start line number should be 1');
-  t.equal(commands[2].startlineno, 4,  'Start line number should be 4');
+  t.equal(commands[0].startlineno, 1,  'Start line number should be 1');
+  t.equal(commands[1].startlineno, 2,  'Start line number should be 2');
+  t.equal(commands[2].startlineno, 5,  'Start line number should be 5');
   t.end();
 });
 
@@ -212,5 +212,24 @@ tape('raw still contains carriage returns', function (t) {
   var dockerFile = fs.readFileSync(dname + '/Dockerfile-with-inline-comment', 'utf8');
   var commands = dockerfileParser.parse(dockerFile);
   t.equal(commands[1].raw, 'RUN cd /srv/app && \\\n    # inline comment\n    make build2',  'Raw should contain raw lines with carri');
+  t.end();
+});
+
+tape('line numbers line up for complex dockerfiles', function (t) {
+  var dname = __dirname;
+  var dockerFile = fs.readFileSync(dname + '/ComplexDockerfile', 'utf8');
+  var commands = dockerfileParser.parse(dockerFile);
+  t.equal(commands[0].startlineno, 1,  'Start line number should be 1');
+  t.equal(commands[0].lineno, 1,  'line number should be 1');
+  t.equal(commands[1].startlineno, 3,  'Start line number should be 3');
+  t.equal(commands[1].lineno, 4,  'line number should be 4');
+  t.equal(commands[2].startlineno, 6,  'Start line number should be 6');
+  t.equal(commands[2].lineno, 6,  'line number should be 6');
+  t.equal(commands[3].startlineno, 8,  'Start line number should be 8');
+  t.equal(commands[3].lineno, 56,  'line number should be 56');
+  t.equal(commands[4].startlineno, 58,  'Start line number should be 58');
+  t.equal(commands[4].lineno, 58,  'line number should be 58');
+  t.equal(commands[5].startlineno, 60,  'Start line number should be 60');
+  t.equal(commands[5].lineno, 89,  'line number should be 89');
   t.end();
 });
