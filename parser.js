@@ -357,7 +357,8 @@ function parseLine(line, lineno, options) {
  * {
  *   name: 'ADD',                 // The name of the command
  *   args: [ '.', '/srv/app' ],   // Arguments (can be array, string or map)
- *   lineno: 5,                   // Line number in the contents string.
+ *   startlino: 5,                // Start line number of the instruction in the contents string
+ *   lineno: 5,                   // End line number in the contents string.
  *   error: null                  // Only if there was an error parsing command
  * }
  *
@@ -370,6 +371,7 @@ function parse(contents, options) {
     var i;
     var line;
     var lineno;
+    var startlineno = 0;
     var lines = contents.split(/\r?\n/);
     var lookingForDirectives = true;
     var parseOptions = {};
@@ -417,6 +419,8 @@ function parse(contents, options) {
         parseResult = parseLine(line, lineno, parseOptions);
         if (parseResult.command) {
             if (parseResult.command.name !== 'COMMENT' || includeComments) {
+                parseResult.command.startlineno = startlineno;
+                startlineno = lineno;
                 commands.push(parseResult.command);
             }
         }

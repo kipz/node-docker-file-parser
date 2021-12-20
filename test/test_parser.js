@@ -193,3 +193,15 @@ tape('inline comments', function (t) {
   t.equal(commands[1].lineno, 4,  'Line number should be 4');
   t.end();
 });
+
+tape('start line numbers', function (t) {
+
+  var dname = __dirname;
+  var dockerFile = fs.readFileSync(dname + '/Dockerfile-with-inline-comment', 'utf8');
+  var commands = dockerfileParser.parse(dockerFile);
+
+  t.equal(commands[0].startlineno, 0,  'Start line number should be 0');
+  t.equal(commands[1].startlineno, 1,  'Start line number should be 1');
+  t.equal(commands[2].startlineno, 4,  'Start line number should be 4');
+  t.end();
+});
