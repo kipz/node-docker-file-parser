@@ -205,3 +205,12 @@ tape('start line numbers', function (t) {
   t.equal(commands[2].startlineno, 4,  'Start line number should be 4');
   t.end();
 });
+
+tape('raw still contains carriage returns', function (t) {
+
+  var dname = __dirname;
+  var dockerFile = fs.readFileSync(dname + '/Dockerfile-with-inline-comment', 'utf8');
+  var commands = dockerfileParser.parse(dockerFile);
+  t.equal(commands[1].raw, 'RUN cd /srv/app && \\\n    # inline comment\n    make build2',  'Raw should contain raw lines with carri');
+  t.end();
+});

@@ -420,8 +420,9 @@ function parse(contents, options) {
         if (parseResult.command) {
             if (parseResult.command.name !== 'COMMENT' || includeComments) {
                 parseResult.command.startlineno = startlineno;
-                startlineno = lineno;
+                parseResult.command.raw = lines.slice(startlineno, lineno).join("\n");
                 commands.push(parseResult.command);
+                startlineno = lineno;
             }
         }
         remainder = parseResult.remainder;
